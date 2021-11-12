@@ -8,8 +8,8 @@ def hurtable(champion, entity):
 
 def in_range(stats, champion, entity):
     distance = math.sqrt((champion.x - entity.x)**2 + (champion.y - entity.y)**2)
-    entity_radius = stats.get(entity.Name)['radius']
-    champion_radius = stats.get(champion.Name)['radius']
+    entity_radius = stats.get(entity.Name)['radius'] * entity.SizeMultiplier
+    champion_radius = stats.get(champion.Name)['radius'] * champion.SizeMultiplier
     return distance - entity_radius <= champion.AtkRange + champion_radius
 
 
