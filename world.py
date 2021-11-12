@@ -69,7 +69,7 @@ def find_objects(mem, blacklist, stats, max_count=800):
         o = read_object(mem, pointer)
         if o is None:
             blacklist.add(pointer)
-        elif o.Name in stats.names():
+        elif o.Name.lower() in stats.names():
             champions[o.NetworkID] = o
     return champions
 

@@ -8,7 +8,7 @@ DEFAULT_WINDUP = 0.3
 
 
 def clean_champion_name(name):
-    return re.sub(r'[^a-zA-Z]', '', name).lower().capitalize()
+    return re.sub(r'[^a-zA-Z]', '', name).lower()
 
 
 class ChampionStats():
@@ -18,8 +18,10 @@ class ChampionStats():
         champion_names = [clean_champion_name(player['championName']) for player in game_data['allPlayers']]
         self.champion_data = {}
         for champion in champion_names:
-            champion_response = requests.get(CHAMPION_INFO_ENDPOINT.format(champion=champion.lower())).json()
-            self.champion_data[champion] = champion_response['Characters/{}/CharacterRecords/Root'.format(champion)]
+            champion_response = requests.get(CHAMPION_INFO_ENDPOINT.format(champion=champion)).json()
+            # lower case everything for consistency
+            champion_response = {k.lower(): v for k, v in champion_response.items()}
+            self.champion_data[champion] = champion_response['Characters/{}/CharacterRecords/Root'.format(champion).lower()]
             self.champion_data[champion]['radius'] = self.champion_data[champion].get('overrideGameplayCollisionRadius', DEFAULT_RADIUS)
             try:
                 self.champion_data[champion]['windup'] = self.champion_data[champion]['basicAttack']['mAttackDelayCastOffsetPercent'] + DEFAULT_WINDUP
