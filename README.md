@@ -7,3 +7,4 @@
 2. Create a python3 venv
 3. Install the requirements `pip install -r requirements.txt`
 4. Get in game and run `main.py`
+5. Hold down space to attack champions
