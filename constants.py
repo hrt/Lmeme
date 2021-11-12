@@ -5,8 +5,7 @@ PROCESS_NAME = 'League of Legends.exe'
 WINDOW_NAME = 'League of Legends (TM) Client'
 OBJECT_SIZE = 0x3400
 
-oObjectManager = 0x187015C      # \x8B\x0D\x00\x00\x00\x00\x89\x7C\x24\x14 xx????xxxx
-                                # \x8B\x0D\x00\x00\x00\x00\x56\x50\xE8\x00\x00\x00\x00\x8B\xF0 xx????xxx????xx
+oObjectManager = 0x187015C
 oObjectMapRoot = 0x28
 oObjectMapNodeNetId = 0x10
 oObjectMapNodeObject = 0x14
@@ -43,14 +42,9 @@ oObjectx = oObjectPos
 oObjectz = oObjectPos + 4
 oObjecty = oObjectPos + 8
 
-oLocalPlayer = 0x310D250        # aBlueHero \x8B\x3D\x00\x00\x00\x00\x3B\xF7\x75 xx????xxx
-oViewProjMatrices = 0x3134D58   # \xB9\x00\x00\x00\x00\x0F\x10\x80 x????xxx
-                                # \x68\x00\x00\x00\x00\x51\x8B\x00 x????xxx
-                                # \x68\x00\x00\x00\x00\x8D\x84\x24\x00\x00\x00\x00\x50\x8B\x44\x24\x1C x????xxx????xxxxx
-oRenderer = 0x310CD4C           # aWidth \xA1\x00\x00\x00\x00\x53\x8B\x1D\x00\x00\x00\x00\x56\x57\x8B\xF9 x????xxx????xxxx
+oLocalPlayer = 0x310D250
+oViewProjMatrices = 0x3134D58
+oRenderer = 0x310CD4C
 oRendererWidth = 0x0
 oRendererHeight = 0x4
-
-oGameTime = 0x31047C4           # \xF3\x0F\x5C\x0D\x00\x00\x00\x00\x0F\x2F\xC1\xF3 xxxx????xxxx
-
-oUnderMouseObject = 0x182B0E8
+oGameTime = 0x31047C4
