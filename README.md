@@ -1,4 +1,4 @@
-# League of legends Orbwalker
+# League of Legends Orbwalker
 
 [![Alt text](https://img.youtube.com/vi/TBaV1QA_NBk/0.jpg)](https://www.youtube.com/watch?v=TBaV1QA_NBk)
 
