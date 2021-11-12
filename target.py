@@ -2,20 +2,24 @@ import math
 from world import effective_damage
 
 
-def hurtable(champion, entity):
-    return entity.Team != champion.Team and entity.Targetable and entity.SpawnCount % 2 == 0 and entity.Visibility
+def is_alive(target):
+    return target.SpawnCount % 2 == 0
 
 
-def in_range(stats, champion, entity):
-    distance = math.sqrt((champion.x - entity.x)**2 + (champion.y - entity.y)**2)
-    entity_radius = stats.get(entity.Name)['radius'] * entity.SizeMultiplier
+def hurtable(champion, target):
+    return target.Team != champion.Team and target.Targetable and is_alive(target) and target.Visibility
+
+
+def in_range(stats, champion, target):
+    distance = math.sqrt((champion.x - target.x)**2 + (champion.y - target.y)**2)
+    entity_radius = stats.get(target.Name)['radius'] * target.SizeMultiplier
     champion_radius = stats.get(champion.Name)['radius'] * champion.SizeMultiplier
     return distance - entity_radius <= champion.AtkRange + champion_radius
 
 
-def can_execute(champion, entity):
-    damage = effective_damage(champion.BaseAtk + champion.BonusAtk, entity.Armor)
-    return damage >= entity.Health
+def can_execute(champion, target):
+    damage = effective_damage(champion.BaseAtk + champion.BonusAtk, target.Armor)
+    return damage >= target.Health
 
 
 def select_lowest_target(stats, champion, entities):
