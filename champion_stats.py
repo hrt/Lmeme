@@ -21,7 +21,7 @@ class ChampionStats():
             champion_response = requests.get(CHAMPION_INFO_ENDPOINT.format(champion=champion)).json()
             # lower case everything for consistency
             champion_response = {k.lower(): v for k, v in champion_response.items()}
-            self.champion_data[champion] = champion_response['Characters/{}/CharacterRecords/Root'.format(champion).lower()]
+            self.champion_data[champion] = champion_response['characters/{}/characterRecords/root'.format(champion)]
             self.champion_data[champion]['radius'] = self.champion_data[champion].get('overrideGameplayCollisionRadius', DEFAULT_RADIUS)
             try:
                 self.champion_data[champion]['windup'] = self.champion_data[champion]['basicAttack']['mAttackDelayCastOffsetPercent'] + DEFAULT_WINDUP
