@@ -21,7 +21,13 @@ class ChampionStats():
             champion_response = requests.get(CHAMPION_INFO_ENDPOINT.format(champion=champion.lower())).json()
             self.champion_data[champion] = champion_response['Characters/{}/CharacterRecords/Root'.format(champion)]
             self.champion_data[champion]['radius'] = self.champion_data[champion].get('overrideGameplayCollisionRadius', DEFAULT_RADIUS)
-            self.champion_data[champion]['windup'] = self.champion_data[champion]['basicAttack']['mAttackDelayCastOffsetPercent'] + DEFAULT_WINDUP
+            try:
+                self.champion_data[champion]['windup'] = self.champion_data[champion]['basicAttack']['mAttackDelayCastOffsetPercent'] + DEFAULT_WINDUP
+            except KeyError:
+                # for some reason champs like Jinx don't have this
+                # maybe it's because she has two different auto attack types?
+                # skip for now - wont work if user is playing a champ like this
+                continue
 
     def get(self, name):
         return self.champion_data[name]
