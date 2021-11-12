@@ -10,7 +10,7 @@
 5. Hold down space to attack champions
 
 ## Offsets
-I've only ever wrote this for a single patch of league of legends (11.2.1) so it's hard to say if the signatures I've come up with will for the future. They were found using IDA.
+I've only ever wrote this for a single patch of league of legends (11.2.1) so it's hard to say if the signatures I've come up with will work in the future. They were found using IDA.
 
 
 | Name                  | Signature                                                                                     | Extra Note        |
