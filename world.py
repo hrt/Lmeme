@@ -1,7 +1,10 @@
 import constants
 import numpy as np
 from pymem.exception import MemoryReadError
+from collections import namedtuple
 from utils import bool_from_buffer, float_from_buffer, int_from_buffer, linked_insert, Node
+
+Object = namedtuple('Object', 'AbilityPower, Armor, AtkRange, AtkSpeedMulti, AtkSpeedMod, BaseAtk, BonusAtk, Crit, CritMulti, Health, Lvl, MagicRes, Mana, MaxHealth, MoveSpeed, Team, Targetable, NetworkID, Visibility, SpawnCount, Name, x, y, z, SizeMultiplier')
 
 
 def read_object(mem, address):
@@ -12,7 +15,7 @@ def read_object(mem, address):
         return None
 
     params = {}
-    for field in constants.Object._fields:
+    for field in Object._fields:
         offset = getattr(constants, 'oObject{field}'.format(field=field))
         params[field] = float_from_buffer(data, offset)
     try:
@@ -27,7 +30,7 @@ def read_object(mem, address):
     params['Targetable'] = bool_from_buffer(data, constants.oObjectTargetable)
     params['Visibility'] = bool_from_buffer(data, constants.oObjectVisibility)
 
-    return constants.Object(**params)
+    return Object(**params)
 
 
 def find_objects(mem, blacklist, stats, max_count=800):

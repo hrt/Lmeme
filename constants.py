@@ -1,6 +1,3 @@
-from collections import namedtuple
-
-Object = namedtuple('Object', 'AbilityPower, Armor, AtkRange, AtkSpeedMulti, AtkSpeedMod, BaseAtk, BonusAtk, Crit, CritMulti, Health, Lvl, MagicRes, Mana, MaxHealth, MoveSpeed, Team, Targetable, NetworkID, Visibility, SpawnCount, Name, x, y, z, SizeMultiplier')
 PROCESS_NAME = 'League of Legends.exe'
 WINDOW_NAME = 'League of Legends (TM) Client'
 OBJECT_SIZE = 0x3400
