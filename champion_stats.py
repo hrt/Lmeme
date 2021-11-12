@@ -32,7 +32,7 @@ class ChampionStats():
                 continue
 
     def get(self, name):
-        return self.champion_data[name]
+        return self.champion_data[name.lower()]
 
     def names(self):
         return self.champion_data.keys()
