@@ -122,9 +122,3 @@ def world_to_screen(view_proj_matrix, width, height, x, y, z):
         return out_x, out_y
 
     return None, None
-
-
-def effective_damage(damage, armour):
-    if armour >= 0:
-        return damage * 100. / (100. + armour)
-    return damage * (2. - (100. / (100. - armour)))

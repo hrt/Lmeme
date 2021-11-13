@@ -1,5 +1,4 @@
 import math
-from world import effective_damage
 
 
 def is_alive(target):
@@ -10,6 +9,15 @@ def hurtable(champion, target):
     return target.Team != champion.Team and target.Targetable and is_alive(target) and target.Visibility
 
 
+def basic_attacks_needed(champion, target):
+    damage = champion.BaseAtk + champion.BonusAtk
+    if target.Armor >= 0:
+        effective_damage = damage * 100. / (100. + target.Armor)
+    else:
+        effective_damage = damage * (2. - (100. / (100. - target.Armor)))
+    return target.Health / effective_damage
+
+
 def in_range(stats, champion, target):
     distance = math.sqrt((champion.x - target.x)**2 + (champion.y - target.y)**2)
     entity_radius = stats.get(target.Name)['radius'] * target.SizeMultiplier
@@ -17,19 +25,17 @@ def in_range(stats, champion, target):
     return distance - entity_radius <= champion.AtkRange + champion_radius
 
 
-def can_execute(champion, target):
-    damage = effective_damage(champion.BaseAtk + champion.BonusAtk, target.Armor)
-    return damage >= target.Health
-
-
 def select_lowest_target(stats, champion, entities):
     # todo: check if champion is stunned
     target = None
+    min_autos = None
     for entity in entities.values():
         if not hurtable(champion, entity):
             continue
         if not in_range(stats, champion, entity):
             continue
-        if target is None or 0 < entity.Health < target.Health:
+        autos = basic_attacks_needed(champion, entity)
+        if target is None or 0 < autos < min_autos:
             target = entity
+            min_autos = autos
     return target
