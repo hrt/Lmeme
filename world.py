@@ -4,7 +4,7 @@ from pymem.exception import MemoryReadError
 from collections import namedtuple
 from utils import bool_from_buffer, float_from_buffer, int_from_buffer, linked_insert, Node
 
-Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, attack_speed_modifier, base_attack, bonus_attack, crit, crit_multiplier, health, magic_resist, mana, max_health, movement_speed, team, size_multiplier, x, y, z, network_id, level, team, spawn_count, targetable, visibility, spells')
+Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, attack_speed_modifier, base_attack, bonus_attack, crit, crit_multiplier, health, magic_resist, mana, max_health, movement_speed, size_multiplier, x, y, z, network_id, level, team, spawn_count, targetable, visibility, spells')
 Spell = namedtuple('Spell', 'level, time')
 
 def read_spells(mem, data):
@@ -42,9 +42,9 @@ def read_object(mem, address):
     params['crit_multiplier'] = float_from_buffer(data, constants.oObjectCritMulti)
     params['magic_resist'] = float_from_buffer(data, constants.oObjectMagicRes)
     params['mana'] = float_from_buffer(data, constants.oObjectMana)
+    params['health'] = float_from_buffer(data, constants.oObjectHealth)
     params['max_health'] = float_from_buffer(data, constants.oObjectMaxHealth)
     params['movement_speed'] = float_from_buffer(data, constants.oObjectMoveSpeed)
-    params['team'] = float_from_buffer(data, constants.oObjectTeam)
     params['size_multiplier'] = float_from_buffer(data, constants.oObjectSizeMultiplier)
     params['x'] = float_from_buffer(data, constants.oObjectx)
     params['y'] = float_from_buffer(data, constants.oObjecty)
@@ -101,8 +101,8 @@ def find_objects(mem, blacklist, stats, max_count=800):
         o = read_object(mem, pointer)
         if o is None:
             blacklist.add(pointer)
-        elif o.Name.lower() in stats.names():
-            champions[o.NetworkID] = o
+        elif o.name.lower() in stats.names():
+            champions[o.network_id] = o
     return champions
 
 
