@@ -18,7 +18,7 @@ oObjectCrit = 0x12E0
 oObjectCritMulti = 0x12D0
 oObjectHealth = 0xDB4
 oObjectMaxHealth = oObjectHealth + 0x10
-oObjectLvl = 0x339C
+oObjectLevel = 0x339C
 oObjectMagicRes = 0x12EC
 oObjectMana = 0x2B4
 oObjectMoveSpeed = 0x12FC
@@ -31,8 +31,10 @@ oObjectVisibility = 0x28C
 oObjectName = 0x2BE4
 oObjectSizeMultiplier = 0x12D4
 
-oObjectSpellBook = 0x27f8
-oObjectSrcIndex = 0x02AC
+oSpellSlotLevel = 0x20
+oSpellSlotTime = 0x28
+
+oObjectSpellBook = 0x27e4
 oObjectSpawnCount = 0x2A0
 
 oObjectx = oObjectPos

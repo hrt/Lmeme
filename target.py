@@ -1,28 +1,46 @@
 import math
 
 
+def is_clone(target):
+    return target.spawn_count == 2 or target.level == 0
+
+
 def is_alive(target):
-    return target.SpawnCount % 2 == 0
+    return target.spawn_count % 2 == 0
 
 
 def hurtable(champion, target):
-    return target.Team != champion.Team and target.Targetable and is_alive(target) and target.Visibility
+    return target.team != champion.team and target.targetable and is_alive(target) and target.visibility
+
+
+def calculate_effective_damage(damage, resist):
+    # todo: consider penetration
+    if resist >= 0:
+        return damage * 100. / (100. + resist)
+    else:
+        return damage * (2. - (100. / (100. - resist)))
 
 
 def basic_attacks_needed(champion, target):
-    damage = champion.BaseAtk + champion.BonusAtk
-    if target.Armor >= 0:
-        effective_damage = damage * 100. / (100. + target.Armor)
-    else:
-        effective_damage = damage * (2. - (100. / (100. - target.Armor)))
-    return target.Health / effective_damage
+    damage = champion.base_attack + champion.bonus_attack
+    effective_damage = calculate_effective_damage(damage, target.armor)
+    return target.health / effective_damage
 
 
-def in_range(stats, champion, target):
-    distance = math.sqrt((champion.x - target.x)**2 + (champion.y - target.y)**2)
-    entity_radius = stats.get(target.Name)['radius'] * target.SizeMultiplier
-    champion_radius = stats.get(champion.Name)['radius'] * champion.SizeMultiplier
-    return distance - entity_radius <= champion.AtkRange + champion_radius
+def distance_between(champion, target):
+    return math.sqrt((champion.x - target.x)**2 + (champion.y - target.y)**2)
+
+
+def in_basic_attack_range(stats, champion, target):
+    # hitbox edge to edge
+    entity_radius = stats.get_radius(target.name) * target.size_multiplier
+    champion_radius = stats.get_radius(champion.name) * champion.size_multiplier
+    return distance_between(champion, target) - entity_radius <= champion.attack_range + champion_radius
+
+
+def in_spell_range(champion, target, spell_radius):
+    # center to center
+    return distance_between(champion, target) <= spell_radius
 
 
 def select_lowest_target(stats, champion, entities):
@@ -32,7 +50,9 @@ def select_lowest_target(stats, champion, entities):
     for entity in entities.values():
         if not hurtable(champion, entity):
             continue
-        if not in_range(stats, champion, entity):
+        if is_clone(entity):
+            continue
+        if not in_basic_attack_range(stats, champion, entity):
             continue
         autos = basic_attacks_needed(champion, entity)
         if target is None or 0 < autos < min_autos:

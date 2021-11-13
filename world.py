@@ -4,7 +4,19 @@ from pymem.exception import MemoryReadError
 from collections import namedtuple
 from utils import bool_from_buffer, float_from_buffer, int_from_buffer, linked_insert, Node
 
-Object = namedtuple('Object', 'AbilityPower, Armor, AtkRange, AtkSpeedMulti, AtkSpeedMod, BaseAtk, BonusAtk, Crit, CritMulti, Health, Lvl, MagicRes, Mana, MaxHealth, MoveSpeed, Team, Targetable, NetworkID, Visibility, SpawnCount, Name, x, y, z, SizeMultiplier')
+Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, attack_speed_modifier, base_attack, bonus_attack, crit, crit_multiplier, health, magic_resist, mana, max_health, movement_speed, team, size_multiplier, x, y, z, network_id, level, team, spawn_count, targetable, visibility, spells')
+Spell = namedtuple('Spell', 'level, time')
+
+def read_spells(mem, data):
+    # pointers at address + ObjSpellBook
+    # Q 0
+    # W 4
+    # E 8
+    # R C
+    # D 10
+    # F 14
+    # todo
+    pass
 
 
 def read_object(mem, address):
@@ -15,21 +27,38 @@ def read_object(mem, address):
         return None
 
     params = {}
-    for field in Object._fields:
-        offset = getattr(constants, 'oObject{field}'.format(field=field))
-        params[field] = float_from_buffer(data, offset)
     try:
-        params['Name'] = mem.read_string(int_from_buffer(data, constants.oObjectName), 50)
+        params['name'] = mem.read_string(int_from_buffer(data, constants.oObjectName), 50)
     except (MemoryReadError, UnicodeDecodeError):
         return None
+    params['ability_power'] = float_from_buffer(data, constants.oObjectAbilityPower)
+    params['armor'] = float_from_buffer(data, constants.oObjectArmor)
+    params['attack_range'] = float_from_buffer(data, constants.oObjectAtkRange)
+    params['attack_speed_multiplier'] = float_from_buffer(data, constants.oObjectAtkSpeedMulti)
+    params['attack_speed_modifier'] = float_from_buffer(data, constants.oObjectAtkSpeedMod)
+    params['base_attack'] = float_from_buffer(data, constants.oObjectBaseAtk)
+    params['bonus_attack'] = float_from_buffer(data, constants.oObjectBonusAtk)
+    params['crit'] = float_from_buffer(data, constants.oObjectCrit)
+    params['crit_multiplier'] = float_from_buffer(data, constants.oObjectCritMulti)
+    params['magic_resist'] = float_from_buffer(data, constants.oObjectMagicRes)
+    params['mana'] = float_from_buffer(data, constants.oObjectMana)
+    params['max_health'] = float_from_buffer(data, constants.oObjectMaxHealth)
+    params['movement_speed'] = float_from_buffer(data, constants.oObjectMoveSpeed)
+    params['team'] = float_from_buffer(data, constants.oObjectTeam)
+    params['size_multiplier'] = float_from_buffer(data, constants.oObjectSizeMultiplier)
+    params['x'] = float_from_buffer(data, constants.oObjectx)
+    params['y'] = float_from_buffer(data, constants.oObjecty)
+    params['z'] = float_from_buffer(data, constants.oObjectz)
 
-    params['NetworkID'] = int_from_buffer(data, constants.oObjectNetworkID)
-    params['Lvl'] = int_from_buffer(data, constants.oObjectLvl)
-    params['Team'] = int_from_buffer(data, constants.oObjectTeam)
-    params['SpawnCount'] = int_from_buffer(data, constants.oObjectSpawnCount)
-    params['Targetable'] = bool_from_buffer(data, constants.oObjectTargetable)
-    params['Visibility'] = bool_from_buffer(data, constants.oObjectVisibility)
+    params['network_id'] = int_from_buffer(data, constants.oObjectNetworkID)
+    params['level'] = int_from_buffer(data, constants.oObjectLevel)
+    params['team'] = int_from_buffer(data, constants.oObjectTeam)
+    params['spawn_count'] = int_from_buffer(data, constants.oObjectSpawnCount)
 
+    params['targetable'] = bool_from_buffer(data, constants.oObjectTargetable)
+    params['visibility'] = bool_from_buffer(data, constants.oObjectVisibility)
+
+    params['spells'] = read_spells(mem, data)
     return Object(**params)
 
 

@@ -8,13 +8,13 @@ class OrbWalker:
         self.can_move_time = game_time
 
     @staticmethod
-    def get_attack_time(champion, stats):
-        attack_speed = min(2.5, champion.AtkSpeedMulti * stats['attackSpeed'])
+    def get_attack_time(champion, base_attack_speed):
+        attack_speed = min(2.5, champion.attack_speed_multiplier * base_attack_speed)
         return 1. / attack_speed
 
     @staticmethod
-    def get_windup_time(champion, stats):
-        return OrbWalker.get_attack_time(champion, stats) * stats['windup']
+    def get_windup_time(champion, base_attack_speed, windup):
+        return OrbWalker.get_attack_time(champion, base_attack_speed) * windup
 
     def walk(self, stats, champion, game_time, x, y):
         mouse.press(mouse.MIDDLE)
@@ -23,9 +23,10 @@ class OrbWalker:
             mouse.move(int(x), int(y))
             mouse.right_click()
             time.sleep(0.01)
-            champion_stats = stats.get(champion.Name)
-            self.can_attack_time = game_time + OrbWalker.get_attack_time(champion, champion_stats)
-            self.can_move_time = game_time + OrbWalker.get_windup_time(champion, champion_stats)
+            attack_speed = stats.get_attack_speed(champion.name)
+            windup = stats.get_windup(champion.name)
+            self.can_attack_time = game_time + OrbWalker.get_attack_time(champion, attack_speed)
+            self.can_move_time = game_time + OrbWalker.get_windup_time(champion, attack_speed, windup)
             mouse.move(stored_x, stored_y)
         elif self.can_move_time < game_time:
             mouse.right_click()
