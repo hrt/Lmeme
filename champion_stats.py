@@ -8,6 +8,9 @@ DEFAULT_WINDUP = 0.3
 
 
 def clean_champion_name(name):
+    # nunu vs nunuandwillump, keep it consistent
+    if 'nunu' in name:
+        return 'nunu'
     return re.sub(r'[^a-zA-Z]', '', name).lower()
 
 
