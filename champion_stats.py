@@ -8,17 +8,14 @@ DEFAULT_WINDUP = 0.3
 
 
 def clean_champion_name(name):
-    # nunu vs nunuandwillump, keep it consistent
-    if 'nunu' in name:
-        return 'nunu'
-    return re.sub(r'[^a-zA-Z]', '', name).lower()
+    return name.split('game_character_displayname_')[1].lower()
 
 
 class ChampionStats():
     def __init__(self):
         game_data = requests.get(GAME_DATA_ENDPOINT, verify=False).json()
         self.game_time = game_data['gameData']['gameTime']
-        champion_names = [clean_champion_name(player['championName']) for player in game_data['allPlayers']]
+        champion_names = [clean_champion_name(player['rawChampionName']) for player in game_data['allPlayers']]
         self.champion_data = {}
         for champion in champion_names:
             champion_response = requests.get(CHAMPION_INFO_ENDPOINT.format(champion=champion)).json()
@@ -39,3 +36,4 @@ class ChampionStats():
 
     def names(self):
         return self.champion_data.keys()
+
