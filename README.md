@@ -9,6 +9,8 @@
 4. Get in game and run `main.py`
 5. Hold down space to attack champions
 
+Note that this repo currently assumes that you have "Target Champions Only" binded to middle mouse (MB3)
+
 ## Offsets
 I've only ever wrote this for a single patch of league of legends (11.2.1) so it's hard to say if the signatures I've come up with will work in the future. They were found using IDA.
 

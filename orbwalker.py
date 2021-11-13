@@ -17,6 +17,7 @@ class OrbWalker:
         return OrbWalker.get_attack_time(champion, stats) * stats['windup']
 
     def walk(self, stats, champion, game_time, x, y):
+        mouse.press(mouse.MIDDLE)
         if x is not None and y is not None and self.can_attack_time < game_time:
             stored_x, stored_y = mouse.get_position()
             mouse.move(int(x), int(y))
@@ -30,3 +31,4 @@ class OrbWalker:
             mouse.right_click()
             MOVE_CLICK_DELAY = 0.09
             self.can_move_time = game_time + MOVE_CLICK_DELAY
+        mouse.release(mouse.MIDDLE)
