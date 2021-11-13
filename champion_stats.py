@@ -36,4 +36,3 @@ class ChampionStats():
 
     def names(self):
         return self.champion_data.keys()
-
