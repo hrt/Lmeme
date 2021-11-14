@@ -108,6 +108,7 @@ def find_champion_pointers(mem, champion_names):
         else:
             if o.name.lower() in champion_names:
                 champion_pointers.add(pointer)
+    assert len(champion_pointers) == len(champion_names), "Only found %s champions" % len(champion_pointers)
     return champion_pointers
 
 
