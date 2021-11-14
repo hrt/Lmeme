@@ -5,32 +5,31 @@ from collections import namedtuple
 from utils import bool_from_buffer, float_from_buffer, int_from_buffer, linked_insert, Node
 
 Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, attack_speed_modifier, base_attack, bonus_attack, crit, crit_multiplier, health, magic_resist, mana, max_health, movement_speed, size_multiplier, x, y, z, network_id, level, team, spawn_count, targetable, visibility, spells')
-Spell = namedtuple('Spell', 'level, time')
+Spells = namedtuple('Spells', 'Q, W, E, R, D, F')
+Spell = namedtuple('Spell', 'level, ready_time')
 
-def read_spells(mem, data):
-    # pointers at address + ObjSpellBook
-    # Q 0
-    # W 4
-    # E 8
-    # R C
-    # D 10
-    # F 14
-    # todo
-    pass
+
+def read_spell(mem, address):
+    data = mem.read_bytes(address, constants.SPELL_SIZE)
+    level = int_from_buffer(data, constants.oSpellSlotLevel)
+    ready_time = float_from_buffer(data, constants.oSpellSlotTime)
+    return Spell(level, ready_time)
+
+
+def read_spells(mem, address):
+    number_of_spells = len(Spells._fields)
+    data = mem.read_bytes(address, number_of_spells * 4)
+    spell_pointers = [int_from_buffer(data, n * 4) for n in range(number_of_spells)]
+    spells = [read_spell(mem, spell_pointer) for spell_pointer in spell_pointers]
+    params = {Spells._fields[n]: spell for n, spell in enumerate(spells)}
+    return Spells(**params)
 
 
 def read_object(mem, address):
-    try:
-        # this sometimes hangs?!
-        data = mem.read_bytes(address, constants.OBJECT_SIZE)
-    except MemoryReadError:
-        return None
+    data = mem.read_bytes(address, constants.OBJECT_SIZE)
 
     params = {}
-    try:
-        params['name'] = mem.read_string(int_from_buffer(data, constants.oObjectName), 50)
-    except (MemoryReadError, UnicodeDecodeError):
-        return None
+    params['name'] = mem.read_string(int_from_buffer(data, constants.oObjectName), 50)
     params['ability_power'] = float_from_buffer(data, constants.oObjectAbilityPower)
     params['armor'] = float_from_buffer(data, constants.oObjectArmor)
     params['attack_range'] = float_from_buffer(data, constants.oObjectAtkRange)
@@ -58,22 +57,24 @@ def read_object(mem, address):
     params['targetable'] = bool_from_buffer(data, constants.oObjectTargetable)
     params['visibility'] = bool_from_buffer(data, constants.oObjectVisibility)
 
-    params['spells'] = read_spells(mem, data)
+    spells_address = int_from_buffer(data, constants.oObjectSpellBook)
+    # Todo: read spells
+    params['spells'] = None
+
     return Object(**params)
 
 
-def find_objects(mem, blacklist, stats, max_count=800):
-    # Given a memory interface, blacklist of addresses and champion stats
-    # we will iterate through objects in memory and read them
-    # if the read fails then we will add the address to the blacklist
+def find_object_pointers(mem, max_count=800):
+    # Given a memory interface will iterate through objects in memory
+    # returns object addresses
     object_pointers = mem.read_uint(mem.base_address + constants.oObjectManager)
     root_node = Node(mem.read_uint(object_pointers + constants.oObjectMapRoot), None)
     addresses_seen = set()
     current_node = root_node
-    pointers = []
+    pointers = set()
     count = 0
     while current_node is not None and count < max_count:
-        if current_node.address in blacklist or current_node.address in addresses_seen:
+        if current_node.address in addresses_seen:
             current_node = current_node.next
             continue
         addresses_seen.add(current_node.address)
@@ -81,7 +82,7 @@ def find_objects(mem, blacklist, stats, max_count=800):
             data = mem.read_bytes(current_node.address, 0x18)
             count += 1
         except MemoryReadError:
-            blacklist.add(current_node.address)
+            pass
         else:
             for i in range(3):
                 child_address = int_from_buffer(data, i * 4)
@@ -91,19 +92,23 @@ def find_objects(mem, blacklist, stats, max_count=800):
             net_id = int_from_buffer(data, constants.oObjectMapNodeNetId)
             if net_id - 0x40000000 <= 0x100000:
                 # help reduce redundant objects
-                pointers.append(int_from_buffer(data, constants.oObjectMapNodeObject))
+                pointers.add(int_from_buffer(data, constants.oObjectMapNodeObject))
         current_node = current_node.next
+    return pointers
 
-    champions = {}
+
+def find_champion_pointers(mem, champion_names):
+    pointers = find_object_pointers(mem)
+    champion_pointers = set()
     for pointer in pointers:
-        if not pointer or pointer in blacklist:
-            continue
-        o = read_object(mem, pointer)
-        if o is None:
-            blacklist.add(pointer)
-        elif o.name.lower() in stats.names():
-            champions[o.network_id] = o
-    return champions
+        try:
+            o = read_object(mem, pointer)
+        except (MemoryReadError, UnicodeDecodeError):
+            pass
+        else:
+            if o.name.lower() in champion_names:
+                champion_pointers.add(pointer)
+    return champion_pointers
 
 
 def find_local_net_id(mem):

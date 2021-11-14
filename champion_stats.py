@@ -14,7 +14,6 @@ def clean_champion_name(name):
 class ChampionStats():
     def __init__(self):
         game_data = requests.get(GAME_DATA_ENDPOINT, verify=False).json()
-        self.game_time = game_data['gameData']['gameTime']
         champion_names = [clean_champion_name(player['rawChampionName']) for player in game_data['allPlayers']]
         self.champion_data = {}
         for champion in champion_names:

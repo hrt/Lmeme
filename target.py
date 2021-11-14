@@ -2,7 +2,7 @@ import math
 
 
 def is_clone(target):
-    return target.spawn_count == 2 or target.level == 0
+    return target.level == 0
 
 
 def is_alive(target):
@@ -47,7 +47,7 @@ def select_lowest_target(stats, champion, entities):
     # todo: check if champion is stunned
     target = None
     min_autos = None
-    for entity in entities.values():
+    for entity in entities:
         if not hurtable(champion, entity):
             continue
         if is_clone(entity):

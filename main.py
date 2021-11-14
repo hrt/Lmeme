@@ -1,7 +1,7 @@
 import time
 import keyboard
 from pymem import Pymem
-from world import find_objects, find_local_net_id, find_game_time, find_view_proj_matrix, world_to_screen
+from world import find_champion_pointers, find_local_net_id, find_view_proj_matrix, read_object, world_to_screen
 from champion_stats import ChampionStats
 from target import select_lowest_target
 from constants import PROCESS_NAME
@@ -11,14 +11,13 @@ from orbwalker import OrbWalker
 def main():
     mem = Pymem(PROCESS_NAME)
     champion_stats = ChampionStats()
-    initial_game_time = champion_stats.game_time
-    orb_walker = OrbWalker(initial_game_time)
-    blacklist = set()
+    orb_walker = OrbWalker(mem)
+    champion_pointers = find_champion_pointers(mem, champion_stats.names())
     while True:
-        game_time = find_game_time(mem)
-        champions = find_objects(mem, blacklist, champion_stats)
+        champions = [read_object(mem, pointer) for pointer in champion_pointers]
+        net_id_to_champion = {c.network_id: c for c in champions}
         local_net_id = find_local_net_id(mem)
-        active_champion = champions[local_net_id]
+        active_champion = net_id_to_champion[local_net_id]
         view_proj_matrix, width, height = find_view_proj_matrix(mem)
 
         target = None
@@ -31,9 +30,9 @@ def main():
             x, y = world_to_screen(view_proj_matrix, width, height, target.x, target.z, target.y)
 
         if orb_walk:
-            orb_walker.walk(champion_stats, active_champion, game_time, x, y)
+            orb_walker.walk(champion_stats, active_champion, x, y)
 
-        time.sleep(0.01)
+        time.sleep(0.005)
 
 
 if __name__ == '__main__':
