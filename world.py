@@ -6,21 +6,21 @@ from utils import bool_from_buffer, float_from_buffer, int_from_buffer, linked_i
 
 Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, attack_speed_modifier, base_attack, bonus_attack, crit, crit_multiplier, health, magic_resist, mana, max_health, movement_speed, size_multiplier, x, y, z, network_id, level, team, spawn_count, targetable, visibility, spells')
 Spells = namedtuple('Spells', 'Q, W, E, R, D, F')
-Spell = namedtuple('Spell', 'level, ready_time')
+Spell = namedtuple('Spell', 'level, cooldown_expire')
 
 
-def read_spell(mem, address):
-    data = mem.read_bytes(address, constants.SPELL_SIZE)
+def read_spell(mem, spell_address):
+    data = mem.read_bytes(spell_address, constants.SPELL_SIZE)
     level = int_from_buffer(data, constants.oSpellSlotLevel)
-    ready_time = float_from_buffer(data, constants.oSpellSlotTime)
-    return Spell(level, ready_time)
+    cooldown_expire = float_from_buffer(data, constants.oSpellSlotCooldownExpire)
+    return Spell(level, cooldown_expire)
 
 
-def read_spells(mem, address):
+def read_spells(mem, spell_addresses_pointer):
     number_of_spells = len(Spells._fields)
-    data = mem.read_bytes(address, number_of_spells * 4)
-    spell_pointers = [int_from_buffer(data, n * 4) for n in range(number_of_spells)]
-    spells = [read_spell(mem, spell_pointer) for spell_pointer in spell_pointers]
+    data = mem.read_bytes(spell_addresses_pointer + constants.oObjectSpellBookArray, number_of_spells * 4)
+    spell_addresses = [int_from_buffer(data, n * 4) for n in range(number_of_spells)]
+    spells = [read_spell(mem, spell_address) for spell_address in spell_addresses]
     params = {Spells._fields[n]: spell for n, spell in enumerate(spells)}
     return Spells(**params)
 
@@ -57,9 +57,8 @@ def read_object(mem, address):
     params['targetable'] = bool_from_buffer(data, constants.oObjectTargetable)
     params['visibility'] = bool_from_buffer(data, constants.oObjectVisibility)
 
-    spells_address = int_from_buffer(data, constants.oObjectSpellBook)
-    # Todo: read spells
-    params['spells'] = None
+    spell_pointers_address = int_from_buffer(data, constants.oObjectSpellBook)
+    params['spells'] = read_spells(mem, spell_pointers_address)
 
     return Object(**params)
 

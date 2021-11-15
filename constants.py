@@ -32,10 +32,11 @@ oObjectVisibility = 0x28C
 oObjectName = 0x2BE4
 oObjectSizeMultiplier = 0x12D4
 oObjectSpawnCount = 0x2A0
-oObjectSpellBook = 0x2370
+oObjectSpellBook = 0x27e4
+oObjectSpellBookArray = 0x488
 
 oSpellSlotLevel = 0x20
-oSpellSlotTime = 0x28
+oSpellSlotCooldownExpire = 0x28
 
 oObjectx = oObjectPos
 oObjectz = oObjectPos + 4
