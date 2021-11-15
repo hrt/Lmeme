@@ -12,6 +12,7 @@ class OrbWalker:
 
     @staticmethod
     def get_attack_time(champion, base_attack_speed):
+        # todo: attack speed isn't always capped at 2.5
         attack_speed = min(2.5, champion.attack_speed_multiplier * base_attack_speed)
         return 1. / attack_speed
 

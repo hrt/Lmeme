@@ -17,14 +17,17 @@ def read_buffs(mem, begin_address, end_address):
     buffs = []
     while current_address != end_address:
         buff_pointer = mem.read_int(current_address)
+        current_address += 0x8
+        if not buff_pointer:
+            continue
         data = mem.read_bytes(buff_pointer, constants.BUFF_SIZE)
         info = int_from_buffer(data, constants.oBuffInfo)
-        if info:
-            name = mem.read_string(info + constants.oBuffInfoName, 255)
-            count = int_from_buffer(data, constants.oBuffCount)
-            end_time = float_from_buffer(data, constants.oBuffEndTime)
-            buffs.append(Buff(name, count, end_time))
-        current_address += 0x8
+        if not info:
+            continue
+        name = mem.read_string(info + constants.oBuffInfoName, 255)
+        count = int_from_buffer(data, constants.oBuffCount)
+        end_time = float_from_buffer(data, constants.oBuffEndTime)
+        buffs.append(Buff(name, count, end_time))
     return buffs
 
 
@@ -82,9 +85,7 @@ def read_object(mem, address):
     buffs_start = int_from_buffer(data, constants.oObjectBuffManagerEntriesStart)
     buffs_end = int_from_buffer(data, constants.oObjectBuffManagerEntriesEnd)
 
-    params['buffs'] = None
-    if params['name'] == 'Twitch':
-        params['buffs'] = read_buffs(mem, buffs_start, buffs_end)
+    params['buffs'] = read_buffs(mem, buffs_start, buffs_end)
 
     return Object(**params)
 
