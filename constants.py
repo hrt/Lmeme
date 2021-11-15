@@ -2,6 +2,7 @@ PROCESS_NAME = 'League of Legends.exe'
 WINDOW_NAME = 'League of Legends (TM) Client'
 OBJECT_SIZE = 0x3400
 SPELL_SIZE = 0x60
+BUFF_SIZE = 0x78
 
 oObjectManager = 0x187015C
 oObjectMapRoot = 0x28
@@ -34,9 +35,18 @@ oObjectSizeMultiplier = 0x12D4
 oObjectSpawnCount = 0x2A0
 oObjectSpellBook = 0x27e4
 oObjectSpellBookArray = 0x488
+oObjectBuffManager = 0x21B8
+oObjectBuffManagerEntriesStart = oObjectBuffManager + 0x10
+oObjectBuffManagerEntriesEnd = oObjectBuffManager + 0x14
 
 oSpellSlotLevel = 0x20
 oSpellSlotCooldownExpire = 0x28
+
+oBuffInfo = 0x8
+oBuffCount = 0x74
+oBuffEndTime = 0x10
+
+oBuffInfoName = 0x8
 
 oObjectx = oObjectPos
 oObjectz = oObjectPos + 4
