@@ -4,9 +4,15 @@ from pymem.exception import MemoryReadError
 from collections import namedtuple
 from utils import bool_from_buffer, float_from_buffer, int_from_buffer, linked_insert, Node
 
-Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, attack_speed_modifier, base_attack, bonus_attack, crit, crit_multiplier, health, magic_resist, mana, max_health, movement_speed, size_multiplier, x, y, z, network_id, level, team, spawn_count, targetable, visibility, spells')
+Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, attack_speed_modifier, base_attack, bonus_attack, crit, crit_multiplier, health, magic_resist, mana, max_health, movement_speed, size_multiplier, x, y, z, network_id, level, team, spawn_count, targetable, visibility, spells, buffs')
 Spells = namedtuple('Spells', 'Q, W, E, R, D, F')
 Spell = namedtuple('Spell', 'level, cooldown_expire')
+Buff = namedtuple('Buff', 'name, count, type, start_time, end_time')
+
+
+def read_buffs(mem, begin_address, end_address):
+    # todo: read buffs
+    return []
 
 
 def read_spell(mem, spell_address):
@@ -60,6 +66,7 @@ def read_object(mem, address):
     spell_pointers_address = int_from_buffer(data, constants.oObjectSpellBook)
     params['spells'] = read_spells(mem, spell_pointers_address)
 
+    params['buffs'] = read_buffs(mem, None, None)
     return Object(**params)
 
 
