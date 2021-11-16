@@ -1,8 +1,8 @@
 import constants
 import numpy as np
 from pymem.exception import MemoryReadError
-from collections import namedtuple
-from utils import bool_from_buffer, float_from_buffer, int_from_buffer, linked_insert, Node
+from collections import namedtuple, defaultdict
+from utils import bool_from_buffer, double_from_buffer, float_from_buffer, int_from_buffer, linked_insert, Node
 
 Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, attack_speed_modifier, base_attack, bonus_attack, crit, crit_multiplier, health, magic_resist, mana, max_health, movement_speed, size_multiplier, x, y, z, network_id, level, team, spawn_count, targetable, visibility, spells, buffs')
 Spells = namedtuple('Spells', 'Q, W, E, R, D, F')
@@ -10,31 +10,38 @@ Spell = namedtuple('Spell', 'level, cooldown_expire')
 Buff = namedtuple('Buff', 'name, count, end_time')
 
 
+def read_buff(mem, address):
+    if not address:
+        return None
+    data = mem.read_bytes(address, constants.BUFF_SIZE)
+    info = int_from_buffer(data, constants.oBuffInfo)
+    if not info:
+        return None
+    name = mem.read_string(info + constants.oBuffInfoName, 255)
+    count = int_from_buffer(data, constants.oBuffCount)
+    end_time = float_from_buffer(data, constants.oBuffEndTime)
+    return Buff(name, count, end_time)
+
+
 def read_buffs(mem, begin_address, end_address):
+    buffs = defaultdict(lambda: [])
     if not begin_address:
-        return []
+        return buffs
+
     current_address = begin_address
-    buffs = []
     while current_address != end_address:
         buff_pointer = mem.read_int(current_address)
+        buff = read_buff(mem, buff_pointer)
+        if buff:
+            buffs[buff.name].append(buff)
         current_address += 0x8
-        if not buff_pointer:
-            continue
-        data = mem.read_bytes(buff_pointer, constants.BUFF_SIZE)
-        info = int_from_buffer(data, constants.oBuffInfo)
-        if not info:
-            continue
-        name = mem.read_string(info + constants.oBuffInfoName, 255)
-        count = int_from_buffer(data, constants.oBuffCount)
-        end_time = float_from_buffer(data, constants.oBuffEndTime)
-        buffs.append(Buff(name, count, end_time))
     return buffs
 
 
 def read_spell(mem, spell_address):
     data = mem.read_bytes(spell_address, constants.SPELL_SIZE)
     level = int_from_buffer(data, constants.oSpellSlotLevel)
-    cooldown_expire = float_from_buffer(data, constants.oSpellSlotCooldownExpire)
+    cooldown_expire = double_from_buffer(data, constants.oSpellSlotCooldownExpire)
     return Spell(level, cooldown_expire)
 
 

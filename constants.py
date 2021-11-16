@@ -1,7 +1,7 @@
 PROCESS_NAME = 'League of Legends.exe'
 WINDOW_NAME = 'League of Legends (TM) Client'
 OBJECT_SIZE = 0x3400
-SPELL_SIZE = 0x60
+SPELL_SIZE = 0x40
 BUFF_SIZE = 0x78
 
 oObjectManager = 0x187015C

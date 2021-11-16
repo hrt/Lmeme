@@ -1,7 +1,8 @@
 import time
 import keyboard
+import twitch
 from pymem import Pymem
-from world import find_champion_pointers, find_local_net_id, find_view_proj_matrix, read_object, world_to_screen
+from world import find_champion_pointers, find_game_time, find_local_net_id, find_view_proj_matrix, read_object, world_to_screen
 from champion_stats import ChampionStats
 from target import select_lowest_target
 from constants import PROCESS_NAME
@@ -19,6 +20,7 @@ def main():
         local_net_id = find_local_net_id(mem)
         active_champion = net_id_to_champion[local_net_id]
         view_proj_matrix, width, height = find_view_proj_matrix(mem)
+        game_time = find_game_time(mem)
 
         target = None
         orb_walk = keyboard.is_pressed(' ')
@@ -30,8 +32,7 @@ def main():
             x, y = world_to_screen(view_proj_matrix, width, height, target.x, target.z, target.y)
 
         if orb_walk:
-            orb_walker.walk(champion_stats, active_champion, x, y)
-
+            orb_walker.walk(champion_stats, active_champion, x, y, game_time)
         time.sleep(0.005)
 
 

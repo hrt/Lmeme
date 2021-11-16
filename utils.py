@@ -18,5 +18,10 @@ def float_from_buffer(data, offset):
     return f
 
 
+def double_from_buffer(data, offset):
+    d, = struct.unpack('d', data[offset:offset + 8])
+    return d
+
+
 def bool_from_buffer(data, offset):
     return data[offset:offset + 1] != b'\x00'
