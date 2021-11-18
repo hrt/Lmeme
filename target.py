@@ -59,3 +59,20 @@ def select_lowest_target(stats, champion, entities):
             target = entity
             min_autos = autos
     return target
+
+def select_lasthit_target(stats, champion, entities):
+    target = None
+    min_autos = None
+    for entity in entities:
+        if not hurtable(champion, entity):
+            continue
+        if not in_basic_attack_range(stats, champion, entity):
+            continue
+        autos = basic_attacks_needed(champion, entity)
+        if autos > 1.1:
+            continue
+        else:
+            target = entity
+            break
+    return target
+
