@@ -16,13 +16,14 @@ class OrbWalker:
         self.can_move_time = game_time
 
     @staticmethod
-    def get_attack_time(champion, base_attack_speed, attack_speed_cap):
-        attack_speed = min(attack_speed_cap, champion.attack_speed_multiplier * base_attack_speed)
+    def get_attack_time(champion, attack_speed_base, attack_speed_ratio, attack_speed_cap):
+        attack_speed = min(attack_speed_cap, (champion.attack_speed_multiplier - 1) * attack_speed_ratio + attack_speed_base)
+        print(attack_speed)
         return 1. / attack_speed
 
     @staticmethod
-    def get_windup_time(champion, base_attack_speed, windup, attack_speed_cap):
-        return OrbWalker.get_attack_time(champion, base_attack_speed, attack_speed_cap) * windup
+    def get_windup_time(champion, attack_speed_base, attack_speed_ratio, windup, attack_speed_cap):
+        return OrbWalker.get_attack_time(champion, attack_speed_base, attack_speed_ratio, attack_speed_cap) * windup
 
     @staticmethod
     def get_attack_speed_cap(stats, champion, game_time):
@@ -49,10 +50,10 @@ class OrbWalker:
             mouse.right_click()
             time.sleep(0.01)
             game_time = find_game_time(self.mem)
-            attack_speed = stats.get_attack_speed(champion.name)
+            attack_speed_base, attack_speed_ratio = stats.get_attack_speed(champion.name)
             windup = stats.get_windup(champion.name)
-            self.can_attack_time = game_time + OrbWalker.get_attack_time(champion, attack_speed, attack_speed_cap)
-            self.can_move_time = game_time + OrbWalker.get_windup_time(champion, attack_speed, windup, attack_speed_cap)
+            self.can_attack_time = game_time + OrbWalker.get_attack_time(champion, attack_speed_base, attack_speed_ratio, attack_speed_cap)
+            self.can_move_time = game_time + OrbWalker.get_windup_time(champion, attack_speed_base, attack_speed_ratio, windup, attack_speed_cap)
             mouse.move(stored_x, stored_y)
         elif self.can_move_time < game_time:
             mouse.right_click()

@@ -23,7 +23,9 @@ class ChampionStats():
 
     def get_attack_speed(self, target):
         root_key = 'characters/{}/characterrecords/root'.format(target.lower())
-        return self.champion_data[target.lower()][root_key]['attackSpeed']
+        attack_speed_base = self.champion_data[target.lower()][root_key]['attackSpeed']
+        attack_speed_ratio = self.champion_data[target.lower()][root_key]['attackSpeedRatio']
+        return attack_speed_base, attack_speed_ratio
 
     def get_windup(self, target):
         # for some reason champs like Jinx don't have this
