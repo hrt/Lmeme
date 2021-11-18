@@ -45,3 +45,8 @@ class ChampionStats():
             self.champion_data[target.lower()]['characters/{}/spells/{}'.format(target.lower(), spell.lower())]['mSpell']
             for spell in self.champion_data[target.lower()][root_key]['spellNames']
         ]
+
+    def is_melee(self, target):
+        root_key = 'characters/{}/characterrecords/root'.format(target.lower())
+        identities = self.champion_data[target.lower()][root_key]['purchaseIdentities']
+        return any(identity for identity in identities if identity == 'Melee')

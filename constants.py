@@ -1,10 +1,10 @@
 PROCESS_NAME = 'League of Legends.exe'
 WINDOW_NAME = 'League of Legends (TM) Client'
 OBJECT_SIZE = 0x3400
-SPELL_SIZE = 0x40
+SPELL_SIZE = 0x60
 BUFF_SIZE = 0x78
 
-oObjectManager = 0x187015C
+oObjectManager = 0x186CD20
 oObjectMapRoot = 0x28
 oObjectMapNodeNetId = 0x10
 oObjectMapNodeObject = 0x14
@@ -52,9 +52,9 @@ oObjectx = oObjectPos
 oObjectz = oObjectPos + 4
 oObjecty = oObjectPos + 8
 
-oLocalPlayer = 0x310D250
-oViewProjMatrices = 0x3134D58
-oRenderer = 0x310CD4C
+oLocalPlayer = 0x310990C
+oViewProjMatrices = 0x31322A8
+oRenderer = 0x310991C
 oRendererWidth = 0x0
 oRendererHeight = 0x4
-oGameTime = 0x31047C4
+oGameTime = 0x3101384
