@@ -96,6 +96,42 @@ def read_object(mem, address):
 
     return Object(**params)
 
+def read_minion(mem, address):
+    data = mem.read_bytes(address, constants.OBJECT_SIZE)
+
+    params = {}
+    params['name'] = mem.read_string(int_from_buffer(data, constants.oObjectName), 50)
+    params['ability_power'] = float_from_buffer(data, constants.oObjectAbilityPower)
+    params['armor'] = float_from_buffer(data, constants.oObjectArmor)
+    params['attack_range'] = float_from_buffer(data, constants.oObjectAtkRange)
+    params['attack_speed_multiplier'] = float_from_buffer(data, constants.oObjectAtkSpeedMulti)
+    params['attack_speed_modifier'] = float_from_buffer(data, constants.oObjectAtkSpeedMod)
+    params['base_attack'] = float_from_buffer(data, constants.oObjectBaseAtk)
+    params['bonus_attack'] = float_from_buffer(data, constants.oObjectBonusAtk)
+    params['crit'] = float_from_buffer(data, constants.oObjectCrit)
+    params['crit_multiplier'] = float_from_buffer(data, constants.oObjectCritMulti)
+    params['magic_resist'] = float_from_buffer(data, constants.oObjectMagicRes)
+    params['mana'] = float_from_buffer(data, constants.oObjectMana)
+    params['health'] = float_from_buffer(data, constants.oObjectHealth)
+    params['max_health'] = float_from_buffer(data, constants.oObjectMaxHealth)
+    params['movement_speed'] = float_from_buffer(data, constants.oObjectMoveSpeed)
+    params['size_multiplier'] = float_from_buffer(data, constants.oObjectSizeMultiplier)
+    params['x'] = float_from_buffer(data, constants.oObjectx)
+    params['y'] = float_from_buffer(data, constants.oObjecty)
+    params['z'] = float_from_buffer(data, constants.oObjectz)
+
+    params['network_id'] = int_from_buffer(data, constants.oObjectNetworkID)
+    params['level'] = int_from_buffer(data, constants.oObjectLevel)
+    params['team'] = int_from_buffer(data, constants.oObjectTeam)
+    params['spawn_count'] = int_from_buffer(data, constants.oObjectSpawnCount)
+
+    params['targetable'] = bool_from_buffer(data, constants.oObjectTargetable)
+    params['visibility'] = bool_from_buffer(data, constants.oObjectVisibility)
+
+    params['spells'] = None
+    params['buffs'] = None
+    return Object(**params)
+
 
 def find_object_pointers(mem, max_count=800):
     # Given a memory interface will iterate through objects in memory
@@ -143,6 +179,20 @@ def find_champion_pointers(mem, champion_names):
                 champion_pointers.add(pointer)
     assert len(champion_pointers) >= len(champion_names), "Only found %s champions, need %s" % (len(champion_pointers), len(champion_names))
     return champion_pointers
+
+
+def find_minion_pointers(mem):
+    pointers = find_object_pointers(mem)
+    minion_pointers = set()
+    for pointer in pointers:
+        try:
+            o = read_minion(mem, pointer)
+        except (MemoryReadError, UnicodeDecodeError):
+            pass
+        else:
+            if "minion" in o.name.lower():
+                minion_pointers.add(pointer)
+    return minion_pointers
 
 
 def find_local_net_id(mem):
