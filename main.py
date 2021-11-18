@@ -1,6 +1,5 @@
 import time
 import keyboard
-import twitch
 from pymem import Pymem
 from world import find_champion_pointers, find_game_time, find_local_net_id, find_view_proj_matrix, read_object, world_to_screen
 from champion_stats import ChampionStats
