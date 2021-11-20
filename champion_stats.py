@@ -35,9 +35,9 @@ class ChampionStats():
         basic_attack = self.champion_data[target.lower()][root_key]['basicAttack']
         if 'mAttackDelayCastOffsetPercent' in basic_attack:
             windup_time = basic_attack['mAttackDelayCastOffsetPercent'] + DEFAULT_WINDUP
-        elif 'mAttackCastTime' in basic_attack and 'mAttackTotalTime' in basic_attack:
-            # this doesn't seem to always be correct
-            windup_time = basic_attack['mAttackCastTime'] / basic_attack['mAttackTotalTime']
+        # elif 'mAttackCastTime' in basic_attack and 'mAttackTotalTime' in basic_attack:
+        #     # this doesn't seem to always be correct
+        #     windup_time = basic_attack['mAttackCastTime'] / basic_attack['mAttackTotalTime']
         else:
             windup_time = 0.3
             print("Failed to find windup time for champion {}. Defaulting to inefficient 30%".format(target))
