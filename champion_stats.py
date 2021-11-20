@@ -32,13 +32,16 @@ class ChampionStats():
     @lru_cache(maxsize=None)
     def get_windup(self, target):
         root_key = 'characters/{}/characterrecords/root'.format(target.lower())
-        try:
-            windup_time = self.champion_data[target.lower()][root_key]['basicAttack']['mAttackDelayCastOffsetPercent'] + DEFAULT_WINDUP
-        except KeyError:
-            # todo: for some reason champs like Jinx don't have this
-            # maybe it's because she has two different auto attack types?
+        basic_attack = self.champion_data[target.lower()][root_key]['basicAttack']
+        if 'mAttackDelayCastOffsetPercent' in basic_attack:
+            windup_time = basic_attack['mAttackDelayCastOffsetPercent'] + DEFAULT_WINDUP
+        elif 'mAttackCastTime' in basic_attack and 'mAttackTotalTime' in basic_attack:
+            # this doesn't seem to always be correct
+            windup_time = basic_attack['mAttackCastTime'] / basic_attack['mAttackTotalTime']
+        else:
             windup_time = 0.3
             print("Failed to find windup time for champion {}. Defaulting to inefficient 30%".format(target))
+        print("Windup %: {}".format(windup_time))
         return windup_time
 
     @lru_cache(maxsize=None)
