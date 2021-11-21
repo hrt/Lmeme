@@ -1,14 +1,11 @@
 PROCESS_NAME = 'League of Legends.exe'
-WINDOW_NAME = 'League of Legends (TM) Client'
-OBJECT_SIZE = 0x3400
-SPELL_SIZE = 0x60
-BUFF_SIZE = 0x78
 
 oObjectManager = 0x186CD20
 oObjectMapRoot = 0x28
 oObjectMapNodeNetId = 0x10
 oObjectMapNodeObject = 0x14
 
+OBJECT_SIZE = 0x3000
 oObjectAbilityPower = 0x1788
 oObjectArmor = 0x12E4
 oObjectAtkRange = 0x1304
@@ -39,18 +36,19 @@ oObjectBuffManager = 0x21B8
 oObjectBuffManagerEntriesStart = oObjectBuffManager + 0x10
 oObjectBuffManagerEntriesEnd = oObjectBuffManager + 0x14
 
+SPELL_SIZE = 0x30
 oSpellSlotLevel = 0x20
 oSpellSlotCooldownExpire = 0x28
 
+BUFF_SIZE = 0x78
 oBuffInfo = 0x8
 oBuffCount = 0x74
 oBuffEndTime = 0x10
-
 oBuffInfoName = 0x8
 
 oObjectx = oObjectPos
-oObjectz = oObjectPos + 4
-oObjecty = oObjectPos + 8
+oObjectz = oObjectPos + 0x4
+oObjecty = oObjectPos + 0x8
 
 oLocalPlayer = 0x310990C
 oViewProjMatrices = 0x31322A8
