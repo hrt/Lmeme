@@ -12,7 +12,7 @@
 Note that this repo currently assumes that you have "Target Champions Only" binded to middle mouse (MB3)
 
 ## Known Issues
-* Issues with retrieving wind up times for certain champs like Jhin and Jinx. They're not supported - I've hard coded a 30% wind up animation when we can't automatically find it. You should see a warning logged about this when you first orb-walk and attack and champion.
+* Issues with retrieving wind up times for certain champs like Jhin and Jinx. They're not supported - I've hard coded a 30% wind up animation when we can't automatically find it.
 
 
 ## Offsets

@@ -17,12 +17,16 @@ class OrbWalker:
 
     @staticmethod
     def get_attack_time(champion, attack_speed_base, attack_speed_ratio, attack_speed_cap):
-        attack_speed = min(attack_speed_cap, (champion.attack_speed_multiplier - 1) * attack_speed_ratio + attack_speed_base)
-        return 1. / attack_speed
+        total_attack_speed = min(attack_speed_cap, (champion.attack_speed_multiplier - 1) * attack_speed_ratio + attack_speed_base)
+        return 1. / total_attack_speed
 
     @staticmethod
-    def get_windup_time(champion, attack_speed_base, attack_speed_ratio, windup, attack_speed_cap):
-        return OrbWalker.get_attack_time(champion, attack_speed_base, attack_speed_ratio, attack_speed_cap) * windup
+    def get_windup_time(champion, attack_speed_base, attack_speed_ratio, windup_percent, windup_modifier, attack_speed_cap):
+        # More information at https://leagueoflegends.fandom.com/wiki/Basic_attack#Attack_speed
+        attack_time = OrbWalker.get_attack_time(champion, attack_speed_base, attack_speed_ratio, attack_speed_cap)
+        base_windup_time = (1 / attack_speed_base) * windup_percent
+        windup_time = base_windup_time + ((attack_time * windup_percent) - base_windup_time) * (1+windup_modifier)
+        return min(windup_time, attack_time)
 
     @staticmethod
     def get_attack_speed_cap(stats, champion, game_time):
@@ -50,9 +54,9 @@ class OrbWalker:
             time.sleep(0.01)
             game_time = find_game_time(self.mem)
             attack_speed_base, attack_speed_ratio = stats.get_attack_speed(champion.name)
-            windup = stats.get_windup(champion.name)
+            windup_percent, windup_modifier = stats.get_windup(champion.name)
             self.can_attack_time = game_time + OrbWalker.get_attack_time(champion, attack_speed_base, attack_speed_ratio, attack_speed_cap)
-            self.can_move_time = game_time + OrbWalker.get_windup_time(champion, attack_speed_base, attack_speed_ratio, windup, attack_speed_cap)
+            self.can_move_time = game_time + OrbWalker.get_windup_time(champion, attack_speed_base, attack_speed_ratio, windup_percent, windup_modifier, attack_speed_cap)
             mouse.move(stored_x, stored_y)
         elif self.can_move_time < game_time:
             mouse.right_click()

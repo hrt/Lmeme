@@ -33,16 +33,15 @@ class ChampionStats():
     def get_windup(self, target):
         root_key = 'characters/{}/characterrecords/root'.format(target.lower())
         basic_attack = self.champion_data[target.lower()][root_key]['basicAttack']
+        windup_percent = 0.3
+        windup_modifier = 0.
         if 'mAttackDelayCastOffsetPercent' in basic_attack:
-            windup_time = basic_attack['mAttackDelayCastOffsetPercent'] + DEFAULT_WINDUP
-        # elif 'mAttackCastTime' in basic_attack and 'mAttackTotalTime' in basic_attack:
-        #     # this doesn't seem to always be correct
-        #     windup_time = basic_attack['mAttackCastTime'] / basic_attack['mAttackTotalTime']
-        else:
-            windup_time = 0.3
-            print("Failed to find windup time for champion {}. Defaulting to inefficient 30%".format(target))
-        print("Windup %: {}".format(windup_time))
-        return windup_time
+            windup_percent = basic_attack['mAttackDelayCastOffsetPercent'] + DEFAULT_WINDUP
+        if 'mAttackDelayCastOffsetPercentAttackSpeedRatio' in basic_attack:
+            windup_modifier = basic_attack['mAttackDelayCastOffsetPercentAttackSpeedRatio']
+        print("Windup percent: {}".format(windup_percent))
+        print("Windup modifier: {}".format(windup_modifier))
+        return windup_percent, windup_modifier
 
     @lru_cache(maxsize=None)
     def get_radius(self, target):
