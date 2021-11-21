@@ -8,6 +8,7 @@ HAIL_OF_BLADES = 'ASSETS/Perks/Styles/Domination/HailOfBlades/HailOfBladesBuff.l
 LETHAL_TEMPO_STACKS_UNCAPPED_RANGED = 30.
 LETHAL_TEMPO_STACKS_UNCAPPED_MELEE = 90.
 
+
 class OrbWalker:
     def __init__(self, mem):
         self.mem = mem

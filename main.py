@@ -32,7 +32,7 @@ def main():
 
         if orb_walk:
             orb_walker.walk(champion_stats, active_champion, x, y, game_time)
-        time.sleep(0.005)
+        time.sleep(0.01)
 
 
 if __name__ == '__main__':

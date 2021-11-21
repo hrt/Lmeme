@@ -4,7 +4,7 @@ from pymem.exception import MemoryReadError
 from collections import namedtuple, defaultdict
 from utils import bool_from_buffer, double_from_buffer, float_from_buffer, int_from_buffer, linked_insert, Node
 
-Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, attack_speed_modifier, base_attack, bonus_attack, crit, crit_multiplier, health, magic_resist, mana, max_health, movement_speed, size_multiplier, x, y, z, network_id, level, team, spawn_count, targetable, visibility, spells, buffs')
+Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, base_attack, bonus_attack, health, magic_resist, mana, max_health, size_multiplier, x, y, z, network_id, level, team, spawn_count, targetable, visibility, spells, buffs')
 Spells = namedtuple('Spells', 'Q, W, E, R, D, F')
 Spell = namedtuple('Spell', 'level, cooldown_expire')
 Buff = namedtuple('Buff', 'name, count, end_time')
@@ -63,20 +63,16 @@ def read_object(mem, address):
     params['armor'] = float_from_buffer(data, constants.oObjectArmor)
     params['attack_range'] = float_from_buffer(data, constants.oObjectAtkRange)
     params['attack_speed_multiplier'] = float_from_buffer(data, constants.oObjectAtkSpeedMulti)
-    params['attack_speed_modifier'] = float_from_buffer(data, constants.oObjectAtkSpeedMod)
     params['base_attack'] = float_from_buffer(data, constants.oObjectBaseAtk)
     params['bonus_attack'] = float_from_buffer(data, constants.oObjectBonusAtk)
-    params['crit'] = float_from_buffer(data, constants.oObjectCrit)
-    params['crit_multiplier'] = float_from_buffer(data, constants.oObjectCritMulti)
     params['magic_resist'] = float_from_buffer(data, constants.oObjectMagicRes)
     params['mana'] = float_from_buffer(data, constants.oObjectMana)
     params['health'] = float_from_buffer(data, constants.oObjectHealth)
     params['max_health'] = float_from_buffer(data, constants.oObjectMaxHealth)
-    params['movement_speed'] = float_from_buffer(data, constants.oObjectMoveSpeed)
     params['size_multiplier'] = float_from_buffer(data, constants.oObjectSizeMultiplier)
-    params['x'] = float_from_buffer(data, constants.oObjectx)
-    params['y'] = float_from_buffer(data, constants.oObjecty)
-    params['z'] = float_from_buffer(data, constants.oObjectz)
+    params['x'] = float_from_buffer(data, constants.oObjectX)
+    params['y'] = float_from_buffer(data, constants.oObjectY)
+    params['z'] = float_from_buffer(data, constants.oObjectZ)
 
     params['network_id'] = int_from_buffer(data, constants.oObjectNetworkID)
     params['level'] = int_from_buffer(data, constants.oObjectLevel)

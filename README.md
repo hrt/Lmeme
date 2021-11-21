@@ -27,4 +27,4 @@ Note that this repo currently assumes that you have "Target Champions Only" bind
 | `oViewProjMatrices`   | `\x68\x00\x00\x00\x00\x8D\x84\x24\x00\x00\x00\x00\x50\x8B\x44\x24\x1C x????xxx????xxxxx`                                      |       -           |
 | `oRenderer`           | `\xA1\x00\x00\x00\x00\x53\x8B\x1D\x00\x00\x00\x00\x56\x57\x8B\xF9 x????xxx????xxxx`                                           | aWidth (string)   |
 | `oGameTime`           | `\xF3\x0F\x5C\x0D\x00\x00\x00\x00\x0F\x2F\xC1\xF3 xxxx????xxxx`                                                               |       -           |
-| `oObjectSpellBook`    | `\x8D\x89\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x5F\xB0\x01\x5E\xC2\x04\x00\x5F xx??????????????xxxxxxxx`   |       -           |
+| `oObjectHealth`       | `\x8D\x8B\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x83\xEC xx????x????xx`                                                          |       -           |
