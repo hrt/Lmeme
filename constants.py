@@ -5,7 +5,7 @@ oObjectMapRoot = 0x28
 oObjectMapNodeNetId = 0x10
 oObjectMapNodeObject = 0x14
 
-OBJECT_SIZE = 0x3000
+OBJECT_SIZE = 0x3400
 oObjectAbilityPower = 0x1788
 oObjectArmor = 0x12E4
 oObjectAtkRange = 0x1304
