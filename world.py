@@ -4,7 +4,7 @@ from pymem.exception import MemoryReadError
 from collections import namedtuple, defaultdict
 from utils import bool_from_buffer, double_from_buffer, float_from_buffer, int_from_buffer, linked_insert, Node
 
-Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, base_attack, bonus_attack, health, magic_resist, mana, max_health, size_multiplier, x, y, z, network_id, level, team, spawn_count, targetable, visibility, spells, buffs')
+Object = namedtuple('Object', 'name, ability_power, armor, attack_range, attack_speed_multiplier, base_attack, bonus_attack, health, network_id, magic_resist, mana, max_health, size_multiplier, x, y, z, level, team, spawn_count, targetable, visibility, spells, buffs')
 Spells = namedtuple('Spells', 'Q, W, E, R, D, F')
 Spell = namedtuple('Spell', 'level, cooldown_expire')
 Buff = namedtuple('Buff', 'name, count, end_time')
