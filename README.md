@@ -1,3 +1,8 @@
+**This repository is outdated.**
+
+Here are some notable repositories that have built on top of this and may be updated:
+* https://github.com/vakdev/VakScript
+
 # League of Legends Orbwalker
 
 [![Alt text](https://img.youtube.com/vi/TBaV1QA_NBk/0.jpg)](https://www.youtube.com/watch?v=TBaV1QA_NBk)
